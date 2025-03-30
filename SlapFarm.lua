@@ -1,10 +1,27 @@
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
-function teleportToRandomPlayer()
+function teleportToRandomPlayerWithTool()
     local players = game.Players:GetPlayers()
-    local randomPlayer = players[math.random(1, #players)]
-    if randomPlayer.Character and randomPlayer.Character:FindFirstChild("HumanoidRootPart") then
+    local eligiblePlayers = {}
+
+    for _, randomPlayer in pairs(players) do
+        if randomPlayer.Character and randomPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local hasTool = false
+            for _, tool in pairs(randomPlayer.Backpack:GetChildren()) do
+                if tool:IsA("Tool") then
+                    hasTool = true
+                    break
+                end
+            end
+            if hasTool then
+                table.insert(eligiblePlayers, randomPlayer)
+            end
+        end
+    end
+
+    if #eligiblePlayers > 0 then
+        local randomPlayer = eligiblePlayers[math.random(1, #eligiblePlayers)]
         local targetPosition = randomPlayer.Character.HumanoidRootPart.Position
         player.Character:MoveTo(targetPosition)
     end
@@ -16,8 +33,15 @@ function teleportToGuidePlace()
 end
 
 function autoSlap()
+    local userInputService = game:GetService("UserInputService")
+    local playerInput = game:GetService("Players").LocalPlayer
+
     while true do
-        mouse.Button1Down:Fire()
+        userInputService.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.Touch then
+                mouse.Button1Down:Fire()
+            end
+        end)
         wait(0.1)
     end
 end
@@ -25,9 +49,8 @@ end
 spawn(autoSlap)
 
 while true do
-    teleportToRandomPlayer()
-    wait(3)
+    teleportToRandomPlayerWithTool()
+    wait(2)
     teleportToGuidePlace()
-    wait(8)
+    wait(7)
 end
--- Made By Cat
