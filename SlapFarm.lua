@@ -2,7 +2,7 @@ local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
 -- List of item names to ignore
-local ignoredItems = {"Megarock", "Diamond Glove", "Overkill"}
+local ignoredItems = {"Megarock", "Diamond", "OVERKILL", "Error"}
 
 function teleportToRandomPlayerWithTool()
     local players = game.Players:GetPlayers()
@@ -16,7 +16,7 @@ function teleportToRandomPlayerWithTool()
             for _, tool in pairs(randomPlayer.Backpack:GetChildren()) do
                 if tool:IsA("Tool") then
                     hasTool = true
-                    -- Check if the tool is an ignored item (Mega Rock or Diamond Glove)
+                    -- Check if the tool is an ignored item (Megarock or Diamond Glove)
                     if table.find(ignoredItems, tool.Name) then
                         hasIgnoredItem = true
                         break
@@ -82,16 +82,15 @@ while true do
     local targetPlayer = teleportToRandomPlayerWithTool()
 
     if targetPlayer then
-        teleportBehindPlayer(targetPlayer)  -- Teleport behind the player
-        lookAtPlayer(targetPlayer)  -- Start looking at the player (aimbot)
-
-        wait(5)  -- Stay behind the player for 5 seconds
-
-        -- Stop aimbot (stop looking at the player)
-        local humanoidRootPart = player.Character.HumanoidRootPart
-        humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position)  -- Make it stop looking at the target
-
-        teleportToGuidePlace()  -- Teleport to guide place (safe spot)
+        -- Keep teleporting behind the player and slap them continuously
+        while true do
+            teleportBehindPlayer(targetPlayer)  -- Teleport behind the player
+            lookAtPlayer(targetPlayer)  -- Start looking at the player (aimbot)
+            wait(0.2)  -- Teleport behind the player every 0.2 seconds
+        end
     end
-    wait(5)  -- Wait 5 seconds before starting the next loop
+
+    -- After teleporting and slapping for 5 seconds, teleport to safe spot and start over
+    wait(5)
+    teleportToGuidePlace()  -- Teleport to guide place (safe spot)
 end
