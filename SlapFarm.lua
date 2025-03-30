@@ -26,8 +26,7 @@ function teleportToRandomPlayerWithTool()
         local direction = (randomPlayer.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).unit
         local teleportBehindPosition = targetPosition - direction * 5
         player.Character:MoveTo(teleportBehindPosition)
-        wait(2)
-        teleportToGuidePlace()
+        wait(2)  -- Stay behind for 2 seconds
     end
 end
 
@@ -36,23 +35,16 @@ function teleportToGuidePlace()
     player.Character:MoveTo(guidePlacePosition)
 end
 
-function autoSlap()
-    local userInputService = game:GetService("UserInputService")
-
+function spamTeleport()
     while true do
-        userInputService.InputBegan:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.Touch then
-                mouse.Button1Down:Fire()
-            end
-        end)
-        wait(0.1)
+        teleportToRandomPlayerWithTool()
+        wait(2)  -- Teleport every 2 seconds
     end
 end
 
-spawn(autoSlap)
+spawn(spamTeleport)
 
 while true do
-    teleportToGuidePlace()
-    teleportToRandomPlayerWithTool()
+    teleportToGuidePlace()  -- Stay safe at the Guide Place
     wait(5)
 end
