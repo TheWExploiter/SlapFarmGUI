@@ -22,11 +22,24 @@ function teleportToRandomPlayerWithTool()
 
     if #eligiblePlayers > 0 then
         local randomPlayer = eligiblePlayers[math.random(1, #eligiblePlayers)]
-        local targetPosition = randomPlayer.Character.HumanoidRootPart.Position
-        local direction = (randomPlayer.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).unit
-        local teleportBehindPosition = targetPosition - direction * 5
-        player.Character:MoveTo(teleportBehindPosition)
-        wait(2)  -- Stay behind for 2 seconds
+        return randomPlayer.Character.HumanoidRootPart.Position
+    end
+    return nil
+end
+
+function orbitAroundPlayer(targetPosition)
+    local radius = 5
+    local angle = 0
+    local center = targetPosition
+    local humanoidRootPart = player.Character:WaitForChild("HumanoidRootPart")
+
+    while true do
+        local x = center.X + radius * math.cos(angle)
+        local z = center.Z + radius * math.sin(angle)
+        humanoidRootPart.CFrame = CFrame.new(x, center.Y, z)
+
+        angle = angle + math.rad(5)  -- Adjust the speed of orbiting by changing the angle increment
+        wait(0.1)
     end
 end
 
@@ -35,16 +48,28 @@ function teleportToGuidePlace()
     player.Character:MoveTo(guidePlacePosition)
 end
 
-function spamTeleport()
+function autoSlap()
+    local userInputService = game:GetService("UserInputService")
+
     while true do
-        teleportToRandomPlayerWithTool()
-        wait(2)  -- Teleport every 2 seconds
+        userInputService.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.Touch then
+                mouse.Button1Down:Fire()
+            end
+        end)
+        wait(0.1)
     end
 end
 
-spawn(spamTeleport)
+spawn(autoSlap)
 
 while true do
-    teleportToGuidePlace()  -- Stay safe at the Guide Place
+    local targetPosition = teleportToRandomPlayerWithTool()
+
+    if targetPosition then
+        orbitAroundPlayer(targetPosition)
+    end
+
+    teleportToGuidePlace()
     wait(5)
 end
