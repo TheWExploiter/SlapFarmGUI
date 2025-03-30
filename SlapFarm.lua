@@ -2,7 +2,7 @@ local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
 -- List of item names to ignore
-local ignoredItems = {"Megarock", "Diamond Glove"}
+local ignoredItems = {"Megarock", "Diamond Glove", "Overkill"}
 
 function teleportToRandomPlayerWithTool()
     local players = game.Players:GetPlayers()
@@ -44,7 +44,6 @@ function teleportBehindPlayer(targetPlayer)
     local direction = (targetPosition - player.Character.HumanoidRootPart.Position).unit
     local teleportBehindPosition = targetPosition - direction * randomOffset
     player.Character:MoveTo(teleportBehindPosition)
-    wait(1)  -- Stay behind the player for 1 second
 end
 
 function lookAtPlayer(targetPlayer)
@@ -84,8 +83,15 @@ while true do
 
     if targetPlayer then
         teleportBehindPlayer(targetPlayer)  -- Teleport behind the player
-        lookAtPlayer(targetPlayer)  -- Keep looking at the player
-        teleportToGuidePlace()  -- Teleport to guide place after 1 second
+        lookAtPlayer(targetPlayer)  -- Start looking at the player (aimbot)
+
+        wait(5)  -- Stay behind the player for 5 seconds
+
+        -- Stop aimbot (stop looking at the player)
+        local humanoidRootPart = player.Character.HumanoidRootPart
+        humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position)  -- Make it stop looking at the target
+
+        teleportToGuidePlace()  -- Teleport to guide place (safe spot)
     end
     wait(5)  -- Wait 5 seconds before starting the next loop
 end
