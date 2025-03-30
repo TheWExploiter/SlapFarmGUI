@@ -4,6 +4,31 @@ local mouse = player:GetMouse()
 -- List of item names to ignore
 local ignoredItems = {"Megarock", "Diamond", "OVERKILL", "Error"}
 
+-- Function to teleport the player behind a target
+function teleportBehindPlayer(targetPlayer)
+    local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
+    local randomOffset = math.random(4, 6)  -- Randomized offset for teleport distance
+    local direction = (targetPosition - player.Character.HumanoidRootPart.Position).unit
+    local teleportBehindPosition = targetPosition - direction * randomOffset
+
+    -- Instant teleport using CFrame
+    player.Character:SetPrimaryPartCFrame(CFrame.new(teleportBehindPosition))
+end
+
+-- Function to make the player always look at the target
+function lookAtPlayer(targetPlayer)
+    local humanoidRootPart = player.Character.HumanoidRootPart
+
+    -- Make sure the player always looks at the target
+    while targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") do
+        local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
+        local targetDirection = (targetPosition - humanoidRootPart.Position).unit
+        humanoidRootPart.CFrame = CFrame.lookAt(humanoidRootPart.Position, targetPosition)
+        wait(0.1)  -- Update every 0.1 second to keep the aimbot active
+    end
+end
+
+-- Function to teleport to a random player with a tool (ignores specific tools)
 function teleportToRandomPlayerWithTool()
     local players = game.Players:GetPlayers()
     local eligiblePlayers = {}
@@ -38,31 +63,13 @@ function teleportToRandomPlayerWithTool()
     return nil
 end
 
-function teleportBehindPlayer(targetPlayer)
-    local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
-    local randomOffset = math.random(4, 6)  -- Randomized offset for teleport distance
-    local direction = (targetPosition - player.Character.HumanoidRootPart.Position).unit
-    local teleportBehindPosition = targetPosition - direction * randomOffset
-    player.Character:MoveTo(teleportBehindPosition)
-end
-
-function lookAtPlayer(targetPlayer)
-    local humanoidRootPart = player.Character.HumanoidRootPart
-
-    -- Make sure the player always looks at the target
-    while targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") do
-        local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
-        local targetDirection = (targetPosition - humanoidRootPart.Position).unit
-        humanoidRootPart.CFrame = CFrame.lookAt(humanoidRootPart.Position, targetPosition)
-        wait(0.1)  -- Update every 0.1 second
-    end
-end
-
+-- Function to teleport to the guide place (safe spot)
 function teleportToGuidePlace()
     local guidePlacePosition = Vector3.new(17892, -130, -3539)
-    player.Character:MoveTo(guidePlacePosition)
+    player.Character:SetPrimaryPartCFrame(CFrame.new(guidePlacePosition))
 end
 
+-- Auto slap function (will click automatically)
 function autoSlap()
     local userInputService = game:GetService("UserInputService")
 
@@ -76,6 +83,7 @@ function autoSlap()
     end
 end
 
+-- Start the auto slap function
 spawn(autoSlap)
 
 while true do
@@ -83,14 +91,15 @@ while true do
 
     if targetPlayer then
         -- Keep teleporting behind the player and slap them continuously
-        while true do
+        local teleportStartTime = tick()
+        while tick() - teleportStartTime < 5 do  -- Teleport and slap for 5 seconds
             teleportBehindPlayer(targetPlayer)  -- Teleport behind the player
-            lookAtPlayer(targetPlayer)  -- Start looking at the player (aimbot)
+            lookAtPlayer(targetPlayer)  -- Keep looking at the player (aimbot)
             wait(0.2)  -- Teleport behind the player every 0.2 seconds
         end
     end
 
     -- After teleporting and slapping for 5 seconds, teleport to safe spot and start over
-    wait(5)
     teleportToGuidePlace()  -- Teleport to guide place (safe spot)
+    wait(1)  -- Wait 1 second before starting again
 end
