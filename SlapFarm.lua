@@ -22,24 +22,12 @@ function teleportToRandomPlayerWithTool()
 
     if #eligiblePlayers > 0 then
         local randomPlayer = eligiblePlayers[math.random(1, #eligiblePlayers)]
-        return randomPlayer.Character.HumanoidRootPart.Position
-    end
-    return nil
-end
-
-function orbitAroundPlayer(targetPosition)
-    local radius = 5
-    local angle = 0
-    local center = targetPosition
-    local humanoidRootPart = player.Character:WaitForChild("HumanoidRootPart")
-
-    while true do
-        local x = center.X + radius * math.cos(angle)
-        local z = center.Z + radius * math.sin(angle)
-        humanoidRootPart.CFrame = CFrame.new(x, center.Y, z)
-
-        angle = angle + math.rad(5)  -- Adjust the speed of orbiting by changing the angle increment
-        wait(0.1)
+        local targetPosition = randomPlayer.Character.HumanoidRootPart.Position
+        local direction = (randomPlayer.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).unit
+        local teleportBehindPosition = targetPosition - direction * 5
+        player.Character:MoveTo(teleportBehindPosition)
+        wait(2)  -- Stay behind the player for 2 seconds
+        teleportToGuidePlace()  -- Teleport back to the guide place
     end
 end
 
@@ -64,12 +52,6 @@ end
 spawn(autoSlap)
 
 while true do
-    local targetPosition = teleportToRandomPlayerWithTool()
-
-    if targetPosition then
-        orbitAroundPlayer(targetPosition)
-    end
-
-    teleportToGuidePlace()
-    wait(5)
+    teleportToRandomPlayerWithTool()  -- Teleport behind a random player with a tool
+    wait(2)
 end
