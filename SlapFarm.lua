@@ -26,8 +26,8 @@ spawn(autoSlap)
 
 while true do
     teleportToRandomPlayer()
-    wait(2)
+    wait(3)
     teleportToGuidePlace()
-    wait(1)
+    wait(8)
 end
 -- Made By Cat
