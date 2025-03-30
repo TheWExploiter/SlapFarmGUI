@@ -29,21 +29,22 @@ end
 
 function teleportBehindPlayer(targetPlayer)
     local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
+    local randomOffset = math.random(4, 6)  -- Randomized offset for teleport distance
     local direction = (targetPosition - player.Character.HumanoidRootPart.Position).unit
-    local teleportBehindPosition = targetPosition - direction * 5
+    local teleportBehindPosition = targetPosition - direction * randomOffset
     player.Character:MoveTo(teleportBehindPosition)
-    wait(2)
+    wait(1)  -- Stay behind the player for 1 second before going back to the safe spot
 end
 
 function lookAtPlayer(targetPlayer)
-    local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
     local humanoidRootPart = player.Character.HumanoidRootPart
 
     -- Make sure the player always looks at the target
     while targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") do
+        local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
         local targetDirection = (targetPosition - humanoidRootPart.Position).unit
         humanoidRootPart.CFrame = CFrame.lookAt(humanoidRootPart.Position, targetPosition)
-        wait(0.1)  -- Update frequently to keep looking at the player
+        wait(0.1)  -- Update frequently every 0.1 second
     end
 end
 
@@ -71,9 +72,9 @@ while true do
     local targetPlayer = teleportToRandomPlayerWithTool()
 
     if targetPlayer then
-        teleportBehindPlayer(targetPlayer)
-        lookAtPlayer(targetPlayer)
-        teleportToGuidePlace()
+        teleportBehindPlayer(targetPlayer)  -- Teleport behind the player
+        lookAtPlayer(targetPlayer)  -- Keep looking at the player
+        teleportToGuidePlace()  -- Teleport to guide place after 1 second
     end
-    wait(5)  -- Time before starting the next teleportation cycle
+    wait(5)  -- Wait 5 seconds before starting the next loop
 end
