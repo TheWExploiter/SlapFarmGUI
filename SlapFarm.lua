@@ -23,7 +23,11 @@ function teleportToRandomPlayerWithTool()
     if #eligiblePlayers > 0 then
         local randomPlayer = eligiblePlayers[math.random(1, #eligiblePlayers)]
         local targetPosition = randomPlayer.Character.HumanoidRootPart.Position
-        player.Character:MoveTo(targetPosition)
+        local direction = (randomPlayer.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).unit
+        local teleportBehindPosition = targetPosition - direction * 5
+        player.Character:MoveTo(teleportBehindPosition)
+        wait(2)
+        teleportToGuidePlace()
     end
 end
 
@@ -34,7 +38,6 @@ end
 
 function autoSlap()
     local userInputService = game:GetService("UserInputService")
-    local playerInput = game:GetService("Players").LocalPlayer
 
     while true do
         userInputService.InputBegan:Connect(function(input)
@@ -49,8 +52,7 @@ end
 spawn(autoSlap)
 
 while true do
-    teleportToRandomPlayerWithTool()
-    wait(2)
     teleportToGuidePlace()
-    wait(7)
+    teleportToRandomPlayerWithTool()
+    wait(5)
 end
