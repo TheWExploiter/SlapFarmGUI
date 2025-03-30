@@ -2,7 +2,7 @@ local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
 -- List of item names to ignore
-local ignoredItems = {"Megarock", "Diamond", "OVERKILL", "Error"}
+local ignoredItems = {"Megarock", "Diamond"}
 
 -- Function to teleport the player behind a target
 function teleportBehindPlayer(targetPlayer)
@@ -90,8 +90,7 @@ while true do
     local targetPlayer = teleportToRandomPlayerWithTool()
 
     if targetPlayer then
-        -- Keep teleporting behind the player and slap them continuously
-        local teleportStartTime = tick()
+        local teleportStartTime = tick()  -- Track the start time
         while tick() - teleportStartTime < 5 do  -- Teleport and slap for 5 seconds
             teleportBehindPlayer(targetPlayer)  -- Teleport behind the player
             lookAtPlayer(targetPlayer)  -- Keep looking at the player (aimbot)
