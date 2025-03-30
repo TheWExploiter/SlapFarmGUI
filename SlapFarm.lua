@@ -1,6 +1,9 @@
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
+-- List of item names to ignore
+local ignoredItems = {"Mega Rock", "Diamond Glove"}
+
 function teleportToRandomPlayerWithTool()
     local players = game.Players:GetPlayers()
     local eligiblePlayers = {}
@@ -8,13 +11,21 @@ function teleportToRandomPlayerWithTool()
     for _, randomPlayer in pairs(players) do
         if randomPlayer.Character and randomPlayer.Character:FindFirstChild("HumanoidRootPart") then
             local hasTool = false
+            local hasIgnoredItem = false
+
             for _, tool in pairs(randomPlayer.Backpack:GetChildren()) do
                 if tool:IsA("Tool") then
                     hasTool = true
-                    break
+                    -- Check if the tool is an ignored item (Mega Rock or Diamond Glove)
+                    if table.find(ignoredItems, tool.Name) then
+                        hasIgnoredItem = true
+                        break
+                    end
                 end
             end
-            if hasTool then
+
+            -- Only add the player if they have a tool and don't have any ignored items
+            if hasTool and not hasIgnoredItem then
                 table.insert(eligiblePlayers, randomPlayer)
             end
         end
