@@ -22,12 +22,28 @@ function teleportToRandomPlayerWithTool()
 
     if #eligiblePlayers > 0 then
         local randomPlayer = eligiblePlayers[math.random(1, #eligiblePlayers)]
-        local targetPosition = randomPlayer.Character.HumanoidRootPart.Position
-        local direction = (randomPlayer.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).unit
-        local teleportBehindPosition = targetPosition - direction * 5
-        player.Character:MoveTo(teleportBehindPosition)
-        wait(2)  -- Stay behind the player for 2 seconds
-        teleportToGuidePlace()  -- Teleport back to the guide place
+        return randomPlayer
+    end
+    return nil
+end
+
+function teleportBehindPlayer(targetPlayer)
+    local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
+    local direction = (targetPosition - player.Character.HumanoidRootPart.Position).unit
+    local teleportBehindPosition = targetPosition - direction * 5
+    player.Character:MoveTo(teleportBehindPosition)
+    wait(2)
+end
+
+function lookAtPlayer(targetPlayer)
+    local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
+    local humanoidRootPart = player.Character.HumanoidRootPart
+
+    -- Make sure the player always looks at the target
+    while targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") do
+        local targetDirection = (targetPosition - humanoidRootPart.Position).unit
+        humanoidRootPart.CFrame = CFrame.lookAt(humanoidRootPart.Position, targetPosition)
+        wait(0.1)  -- Update frequently to keep looking at the player
     end
 end
 
@@ -52,6 +68,12 @@ end
 spawn(autoSlap)
 
 while true do
-    teleportToRandomPlayerWithTool()  -- Teleport behind a random player with a tool
-    wait(2)
+    local targetPlayer = teleportToRandomPlayerWithTool()
+
+    if targetPlayer then
+        teleportBehindPlayer(targetPlayer)
+        lookAtPlayer(targetPlayer)
+        teleportToGuidePlace()
+    end
+    wait(5)  -- Time before starting the next teleportation cycle
 end
