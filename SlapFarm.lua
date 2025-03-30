@@ -2,7 +2,7 @@ local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
 -- List of item names to ignore
-local ignoredItems = {"Mega Rock", "Diamond Glove"}
+local ignoredItems = {"Megarock", "Diamond Glove"}
 
 function teleportToRandomPlayerWithTool()
     local players = game.Players:GetPlayers()
