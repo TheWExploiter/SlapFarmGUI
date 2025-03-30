@@ -33,7 +33,7 @@ function teleportBehindPlayer(targetPlayer)
     local direction = (targetPosition - player.Character.HumanoidRootPart.Position).unit
     local teleportBehindPosition = targetPosition - direction * randomOffset
     player.Character:MoveTo(teleportBehindPosition)
-    wait(1)  -- Stay behind the player for 1 second before going back to the safe spot
+    wait(1)  -- Stay behind the player for 1 second
 end
 
 function lookAtPlayer(targetPlayer)
@@ -44,7 +44,7 @@ function lookAtPlayer(targetPlayer)
         local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
         local targetDirection = (targetPosition - humanoidRootPart.Position).unit
         humanoidRootPart.CFrame = CFrame.lookAt(humanoidRootPart.Position, targetPosition)
-        wait(0.1)  -- Update frequently every 0.1 second
+        wait(0.1)  -- Update every 0.1 second
     end
 end
 
