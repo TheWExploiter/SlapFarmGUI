@@ -1,7 +1,7 @@
 # Slap Farm 
-A Slap Farm For Slap Battles
-> Need Default
+**A Slap Farm For Slap Battles**
+# > Need Dual
 
 
  
-**Made By ImCatTrust**
+**Made By Incocnito Scripts**
